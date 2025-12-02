@@ -1,0 +1,28 @@
+<!-- src/app/features/auth/login/login.component.html -->
+<div class="login-container">
+  <h1>Secure Bank Login</h1>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label>
+      Username
+      <input type="text" formControlName="username" autocomplete="username" />
+    </label>
+
+    <label>
+      Password
+      <input
+        type="password"
+        formControlName="password"
+        autocomplete="current-password"
+      />
+    </label>
+
+    <button type="submit" [disabled]="isLoading || form.invalid">
+      {{ isLoading ? 'Logging in…' : 'Login' }}
+    </button>
+
+    <p *ngIf="error" class="error">
+      {{ error }}
+    </p>
+  </form>
+</div>
