@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "../../../environment/environment";
+import { Injectable } from "@angular/core";
 
 export interface Account {
   id: string;
@@ -16,6 +17,7 @@ export interface TransferRequest {
   description?: string;
 }
 
+@Injectable({ providedIn: 'root' })
 export class BankingService {
     constructor(private http: HttpClient){}
 

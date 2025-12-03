@@ -1,0 +1,28 @@
+<h2>Make a transfer</h2>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <label>
+    From account ID
+    <input type="text" formControlName="fromAccountId" />
+  </label>
+
+  <label
+    >To IBAN
+    <input type="text" formControlName="toIban" />
+  </label>
+
+  <label>
+    Amount
+    <input type="number" formControlName="amount" step="0.01" />
+  </label>
+
+  <label>
+    Description (optional)
+    <input type="text" formControlName="description" />
+  </label>
+
+  <button type="submit" [disabled]="isLoading || form.invalid">
+    {{ isLoading ? "Sending…" : "Send transfer" }}
+  </button>
+  <p *ngIf="success" class="success">{{ success }}</p>
+  <p *ngIf="error" class="error">{{ error }}</p>
+</form>
