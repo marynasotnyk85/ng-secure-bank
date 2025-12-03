@@ -1,6 +1,14 @@
-import { OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Account, BankingService } from "../banking.service";
+import { CommonModule } from "@angular/common";
 
+@Component({
+  selector: 'app-dashboard',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './dashboard.component.html',
+ // styleUrls: ['./dashboard.component.scss']
+})
 export class DashboardComponent implements OnInit {
     accounts: Account[]=[];
     isLoading = false;

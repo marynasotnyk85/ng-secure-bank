@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BankingService } from '../banking.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-transfer',
+standalone: true,
+imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './transfer.component.html',
 })
 export class TransferComponent implements OnInit {
