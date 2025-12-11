@@ -7,3 +7,7 @@
     <strong>{{ acc.name }}</strong> — {{ acc.balance | number:'1.2-2' }} {{ acc.currency }}
   </li>
 </ul>
+
+<button (click)="goToTransfer()">
+  Make a transfer
+</button>

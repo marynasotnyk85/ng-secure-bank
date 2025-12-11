@@ -30,7 +30,7 @@ export class TransferComponent implements OnInit {
     if (this.form.invalid) return;
 
     this.isLoading = true;
-     this.success = null;
+    this.success = null;
     this.error = null;
 
     this.banking.makeTransfer(this.form.value as any).subscribe({
@@ -39,8 +39,9 @@ export class TransferComponent implements OnInit {
             this.success = 'Transfer completed successfully.';
             this.form.patchValue({ amount: 0, desciprion: ''})
         },
-        error: () => {
+        error: (err) => {
         this.isLoading = false;
+        console.error('Transfer error:', err);  
         this.error = 'Transfer failed. Please check the data and try again.';
       }
     })

@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Account, BankingService } from "../banking.service";
 import { CommonModule } from "@angular/common";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +14,7 @@ export class DashboardComponent implements OnInit {
     accounts: Account[]=[];
     isLoading = false;
 
-    constructor(private banking: BankingService){}
+    constructor(private banking: BankingService, private router: Router){}
     
     ngOnInit(): void {
        this.isLoading = true;
@@ -28,5 +29,9 @@ export class DashboardComponent implements OnInit {
 
        })
     }
+
+     goToTransfer() {
+    this.router.navigate(['/bank/transfer']);
+  }
 
 }
