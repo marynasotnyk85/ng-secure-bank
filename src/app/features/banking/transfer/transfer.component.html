@@ -1,28 +1,97 @@
-<h2>Make a transfer</h2>
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <label>
-    From account ID
-    <input type="text" formControlName="fromAccountId" />
-  </label>
-
-  <label
-    >To IBAN
-    <input type="text" formControlName="toIban" />
-  </label>
-
-  <label>
-    Amount
-    <input type="number" formControlName="amount" step="0.01" />
-  </label>
-
-  <label>
-    Description (optional)
-    <input type="text" formControlName="description" />
-  </label>
-
-  <button type="submit" [disabled]="isLoading || form.invalid">
-    {{ isLoading ? "Sending…" : "Send transfer" }}
+<mat-toolbar color="primary" class="toolbar">
+  <button mat-icon-button [routerLink]="['/bank/dashboard']">
+    <mat-icon>arrow_back</mat-icon>
   </button>
-  <p *ngIf="success" class="success">{{ success }}</p>
-  <p *ngIf="error" class="error">{{ error }}</p>
-</form>
+  <span class="toolbar-title">Make a transfer</span>
+  <span class="flex-spacer"></span>
+</mat-toolbar>
+
+<div class="transfer-wrapper">
+  <!-- Loading accounts -->
+  <div class="center" *ngIf="isLoadingAccounts">
+    <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+  </div>
+
+  <!-- Error loading accounts -->
+  <div class="center error" *ngIf="!isLoadingAccounts && error">
+    {{ error }}
+    <button mat-stroked-button color="primary" (click)="loadAccounts()">
+      Retry
+    </button>
+  </div>
+
+  <!-- Form -->
+  <mat-card class="transfer-card" *ngIf="!isLoadingAccounts && !error">
+    <mat-card-title>New transfer</mat-card-title>
+    <mat-card-subtitle>
+      Move money securely between your accounts and external IBANs.
+    </mat-card-subtitle>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="transfer-form">
+      <!-- From account -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>From account</mat-label>
+        <mat-select formControlName="fromAccountId">
+          <mat-option *ngFor="let acc of accounts" [value]="acc.id">
+            {{ acc.name }} — {{ acc.balance | number:'1.2-2' }} {{ acc.currency }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.controls['fromAccountId'].touched && form.controls['fromAccountId'].invalid">
+          Please select an account
+        </mat-error>
+      </mat-form-field>
+
+      <!-- To IBAN -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>To IBAN</mat-label>
+        <input matInput formControlName="toIban" placeholder="IT00A0000000000000000000000" />
+        <mat-error *ngIf="form.controls['toIban'].touched && form.controls['toIban'].invalid">
+          IBAN is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Amount + currency (here we keep simple input) -->
+      <div class="row">
+        <mat-form-field appearance="outline" class="flex-2">
+          <mat-label>Amount</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="amount"
+            min="0.01"
+            step="0.01"
+          />
+          <mat-error *ngIf="form.controls['amount'].touched && form.controls['amount'].invalid">
+            Enter a valid amount greater than zero
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Description -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description (optional)</mat-label>
+        <input matInput formControlName="description" />
+      </mat-form-field>
+
+      <!-- Error message -->
+      <p *ngIf="error" class="error-msg">{{ error }}</p>
+
+      <!-- Submit -->
+      <button
+        mat-raised-button
+        color="accent"
+        class="submit-btn"
+        type="submit"
+        [disabled]="isSubmitting || form.invalid"
+      >
+        <ng-container *ngIf="!isSubmitting">
+          <mat-icon>send</mat-icon>
+          Send transfer
+        </ng-container>
+        <ng-container *ngIf="isSubmitting">
+          <mat-spinner diameter="20"></mat-spinner>
+        </ng-container>
+      </button>
+    </form>
+  </mat-card>
+</div>

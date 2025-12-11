@@ -1,0 +1,18 @@
+<mat-card class="security-card">
+  <mat-card-header>
+    <div mat-card-avatar class="security-avatar">
+      <mat-icon>security</mat-icon>
+    </div>
+    <mat-card-title>{{ title }}</mat-card-title>
+    <mat-card-subtitle>Keep your online banking safe</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item *ngFor="let msg of messages">
+        <mat-icon matListItemIcon>warning_amber</mat-icon>
+        <div matListItemTitle>{{ msg }}</div>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>
