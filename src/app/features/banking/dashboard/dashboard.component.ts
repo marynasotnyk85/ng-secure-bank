@@ -12,6 +12,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { SecurityBannerComponent } from "../../../shared/components/security-banner/security-banner.component";
 import { MatTooltip } from "@angular/material/tooltip";
+import { AuthService } from "../../../core/auth/auth.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -46,11 +47,11 @@ export class DashboardComponent implements OnInit {
    securityMessages = [
     'Never share your password or one-time codes with anyone.',
     'Always check the URL: it must start with https:// and be your official bank domain.',
-    'If an email or SMS asks you to log in from a link, go to the site manually instead.',
+    //'If an email or SMS asks you to log in from a link, go to the site manually instead.',
     'Log out after using online banking on shared or public devices.'
   ];
 
-    constructor(private banking: BankingService, private router: Router){}
+    constructor(private banking: BankingService, private router: Router,  private auth: AuthService){}
     
     ngOnInit(): void {
        this.loadAccounts();   
@@ -90,5 +91,9 @@ export class DashboardComponent implements OnInit {
      goToTransfer() {
     this.router.navigate(['/bank/transfer']);
   }
+
+  logout() {
+  this.auth.logout().subscribe();
+}
 
 }

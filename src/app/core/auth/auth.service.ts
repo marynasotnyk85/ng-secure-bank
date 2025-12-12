@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { environment } from '../../../environment/environment';
 import { User } from './user.model';
+import { Router } from '@angular/router';
 
 interface LoginResponse {
   user: User;
@@ -12,7 +13,7 @@ interface LoginResponse {
 export class AuthService {
   private currentUser$ = new BehaviorSubject<User | null>(null);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   get user() {
     return this.currentUser$.asObservable();
@@ -34,7 +35,7 @@ export class AuthService {
     return this.http
       .post<LoginResponse>(`${environment.apiBaseUrl}/auth/login`, {
         username,
-        password
+        password,
       })
       .pipe(
         tap((res) => {
@@ -51,7 +52,7 @@ export class AuthService {
       .pipe(tap((user) => this.currentUser$.next(user)));
   }
 
-  logout() {
+  /* logout() {
     return this.http
       .post<void>(`${environment.apiBaseUrl}/auth/logout`, {})
       .pipe(
@@ -60,5 +61,21 @@ export class AuthService {
           // Cookie is invalidated on backend
         })
       );
+  }*/
+
+  logout(): Observable<void> {
+    // Remove cookies
+    document.cookie =
+      'FAKE_SESSION=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie =
+      'XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+    // clear in-memory user
+    this.currentUser$.next(null);
+
+    // Redirect to login
+    this.router.navigate(['/login']);
+
+    return of();
   }
 }

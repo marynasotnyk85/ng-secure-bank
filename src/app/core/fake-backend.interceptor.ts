@@ -57,6 +57,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         if (url.endsWith('/payments/transfer') && method === 'POST') {
           return this.transfer(req);
         }
+        if (url.endsWith('/auth/logout') && method === 'POST') {
+           return this.logout();
+}
 
         // default: pass through
         return next.handle(req);
@@ -127,5 +130,13 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     return throwError(
       () => new HttpErrorResponse({ status, error: { message } })
     );
+  }
+
+  private logout(): Observable<HttpEvent<any>>{
+    // Delete cookies
+  document.cookie = 'FAKE_SESSION=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  document.cookie = 'XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  console.log('[FakeBackend] Logged out');
+  return this.ok({ status: 'logged_out' });
   }
 }
